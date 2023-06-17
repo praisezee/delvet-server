@@ -9,9 +9,9 @@ const corsOptions = require('./config/corsOptions')
 const PORT = process.env.PORT || 3500;
 
 //CORS - Cross Site Origin Resource Sharing. This give the frontent to get access to the backend.
-app.use( credentials )
+app.use( credentials );
 app.options( cors( corsOptions ) )
-app.use( cors( corsOptions ) )
+app.use( cors(corsOptions) );
 //
 
 
