@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require( 'express' );
-const pool = require('./config/dbConn')
 const cors = require( 'cors' );
 const cookieParser = require( 'cookie-parser' );
 const app = express()
