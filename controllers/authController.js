@@ -8,7 +8,7 @@ const createUser = async ( req, res ) =>
       const { name, email, phoneNumber, password } = req.body;
       console.log(req.body)
       const id = uuid()
-      if ( !name || !email || !phoneNumber || !password ) return res.status( 400 ).json( { message: "All feild must be entered" } );// The server sends a status code os 400 meaning bad request. this is to tell the user that all feild must be feild
+      if ( !name || !email || !phoneNumber || !password ) return res.status( 400 ).json( { message: "All field must be entered" } );// The server sends a status code os 400 meaning bad request. this is to tell the user that all field must be field
       pool.getConnection( ( err, connection ) =>
       {
             if ( err ) throw err;
@@ -48,7 +48,7 @@ const createUser = async ( req, res ) =>
 const loginUser = async ( req, res ) =>
 {
       const { email, password } = req.body;
-      if ( !email || !password ) return res.status( 400 ).json( { message: "All feild must be entered" } );// The server sends a status code os 400 meaning bad request. this is to tell the user that all feild must be feild
+      if ( !email || !password ) return res.status( 400 ).json( { message: "All field must be entered" } );// The server sends a status code os 400 meaning bad request. this is to tell the user that all feild must be feild
       pool.getConnection( ( err, connection ) =>
       {
             if ( err ) throw err;
@@ -61,8 +61,8 @@ const loginUser = async ( req, res ) =>
                   } else if ( !err && rows.length ) {
                         const users = {...rows[0]}
                         //console.log(rows)
-                        const match = await bcrypt.compare(password, users.password );
-                        if ( match ) {
+                        const match = await bcrypt.compare(password, users.password ); // to compare the password the user entered against that saved in the database
+                        if ( match ) {// for authorization
                               const accessToken = jwt.sign(
                                     { "email": email },
                                     process.env.ACCESS_TOKEN,

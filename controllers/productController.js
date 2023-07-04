@@ -13,7 +13,7 @@ const getProducts = ( req, res ) =>
                   if ( err ) {
                         console.error(err)
                   } else if ( !err && rows.length ) {
-                        res.status(200).json(rows)
+                        res.status(200).json(rows) // will display products
                   } else {
                         res.status(202).json({message:"No product at the moment"})
                   }
@@ -48,18 +48,20 @@ const updateProduct = ( req, res ) =>
 
       pool.getConnection( ( err, connection ) =>
       {
-            if ( err ) throw new Error( err )
+            if ( err ) throw new Error( err ) // to catch the error and prevent the app from crashing on error
             
             connection.query( `SELECT * from products WHERE id = '${ id }'`, ( err, rows ) =>
             {console.log(rows)
                   if ( err ) {
                         res.status(500).json(err)
                   } else if ( !err && rows.length ) {
-                        connection.query( `UPDATE products SET name = '${ name }' , category = '${ category }', quantity = ${ quantity }, description = '${ description }', price = '${ price }', src = '${src}' WHERE id = '${ id }'  `, ( err, rows ) =>
+                        const product ={...rows[0]}
+                        const source = src === '' ? product.src : src//if src is an empty string,use the src image in the db else replace with new image
+                        connection.query( `UPDATE products SET name = '${ name }' , category = '${ category }', quantity = ${ quantity }, description = '${ description }', price = '${ price }', src = '${source}' WHERE id = '${ id }'  `, ( err, rows ) =>
                         {
                               connection.release()
                               if ( !err ) {
-                                    const product = { name, category, quantity, description, id, price }
+                                    const product = { name, category, quantity, description, id, price,source }//if no error, send to front end
                                     console.log(product)
                                     res.status(200).json(product)
                               } else {
@@ -83,7 +85,7 @@ const deleteProduct = ( req, res ) =>
             connection.query( `SELECT * from products WHERE id = '${ id}'`,  ( err, row ) =>
             {
                   if ( err ) {
-                        res.status(500).json(err)
+                        res.status(500).json(err) // internal server error
                   } else if (!err && row.length ) {
                         connection.query( `DELETE FROM products WHERE id = '${ id }'`, ( err, rows ) =>
                         {
@@ -93,7 +95,7 @@ const deleteProduct = ( req, res ) =>
                               res.status(500).json(err)
                         })
                   } else {
-                        res.status(202).json({message: `Product with id ${id} was not found`})
+                        res.status(400).json({message: `Product with id ${id} was not found`})
                   }
             })
             
@@ -112,7 +114,8 @@ const getSingleProduct = ( req, res ) =>
                   if ( err ) {
                         res.status(500).json({message:"internal server error"})
                   } else if ( !err && row.length ) {
-                        res.status(200).json(row[0])
+                        const product ={...row[0]}
+                        res.status(200).json(product) 
                   } else {
                         res.status(400).json({message:"product does not exist"})
                   }

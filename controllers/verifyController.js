@@ -9,7 +9,7 @@ const verifyEmail = async ( req, res ) =>
       const code = cryptoRandomString( { length: 6, type: 'alphanumeric' } )
 
       const html = `
-      <h4>We noticed that you registered on witwater. your verification code is </h4>
+      <h4>We noticed that you registered on delvet. your verification code is </h4>
       <h1>${code}</h1>
       `
       const transporter = nodemailer.createTransport( {
@@ -57,7 +57,7 @@ const verifyEmail = async ( req, res ) =>
 const verifyCode = ( req, res ) =>
 {
       const { code, email } = req.body;
-      if(!email|| !code) return res.status(400).json({message:"all feild is required"})
+      if(!email|| !code) return res.status(400).json({message:"all field is required"})
       pool.getConnection( ( err, connection ) =>
       {
             if (err) throw new Error(err)
