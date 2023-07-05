@@ -56,8 +56,13 @@ const updateProduct = ( req, res ) =>
                         res.status(500).json(err)
                   } else if ( !err && rows.length ) {
                         const product ={...rows[0]}
-                        const source = src === '' ? product.src : src//if src is an empty string,use the src image in the db else replace with new image
-                        connection.query( `UPDATE products SET name = '${ name }' , category = '${ category }', quantity = ${ quantity }, description = '${ description }', price = '${ price }', src = '${source}' WHERE id = '${ id }'  `, ( err, rows ) =>
+                        const source = !src ? product.src : src//if src is an empty string,use the src image in the db else replace with new image
+                        const productName = !name ? product.name : name//if src is an empty string,use the src image in the db else replace with new image
+                        const productQuantity = !quantity ? product.quantity : quantity//if src is an empty string,use the src image in the db else replace with new image
+                        const productDescription = !description ? product.description : description//if src is an empty string,use the src image in the db else replace with new image
+                        const productCategory = !category ? product.category : category//if src is an empty string,use the src image in the db else replace with new image
+                        const productPrice = !price ? product.price : price//if src is an empty string,use the src image in the db else replace with new image
+                        connection.query( `UPDATE products SET name = '${ productName }' , category = '${ productCategory }', quantity = ${ productQuantity }, description = '${ productDescription }', price = '${ productPrice }', src = '${source}' WHERE id = '${ id }'  `, ( err, rows ) =>
                         {
                               connection.release()
                               if ( !err ) {
