@@ -29,7 +29,7 @@ const createProduct = ( req, res ) =>
       {
             if(err) throw new Error(err)
 
-            connection.query( 'INSERT INTO products SET ?', { id, name, category, quantity, description,price,src }, ( err, rows ) =>
+            connection.query( 'INSERT INTO products SET ?', { product_id:id , name, category, quantity, description,price,src }, ( err, rows ) =>
             {
                   connection.release();
                   if ( !err ) {
@@ -50,8 +50,11 @@ const updateProduct = ( req, res ) =>
       {
             if ( err ) throw new Error( err ) // to catch the error and prevent the app from crashing on error
             
-            connection.query( `SELECT * from products WHERE id = '${ id }'`, ( err, rows ) =>
-            {console.log(rows)
+            connection.query( `SELECT * from products WHERE product_id = '${ id }'`, ( err, rows ) =>
+            {
+                  console.log( rows )
+                  connection.release();
+                  
                   if ( err ) {
                         res.status(500).json(err)
                   } else if ( !err && rows.length ) {
@@ -62,7 +65,7 @@ const updateProduct = ( req, res ) =>
                         const productDescription = !description ? product.description : description//if src is an empty string,use the src image in the db else replace with new image
                         const productCategory = !category ? product.category : category//if src is an empty string,use the src image in the db else replace with new image
                         const productPrice = !price ? product.price : price//if src is an empty string,use the src image in the db else replace with new image
-                        connection.query( `UPDATE products SET name = '${ productName }' , category = '${ productCategory }', quantity = ${ productQuantity }, description = '${ productDescription }', price = '${ productPrice }', src = '${source}' WHERE id = '${ id }'  `, ( err, rows ) =>
+                        connection.query( `UPDATE products SET name = '${ productName }' , category = '${ productCategory }', quantity = ${ productQuantity }, description = '${ productDescription }', price = '${ productPrice }', src = '${source}' WHERE product_id = '${ id }'  `, ( err, rows ) =>
                         {
                               connection.release()
                               if ( !err ) {
@@ -87,7 +90,7 @@ const deleteProduct = ( req, res ) =>
       {
             if ( err ) throw new Error( err )
 
-            connection.query( `SELECT * from products WHERE id = '${ id}'`,  ( err, row ) =>
+            connection.query( `SELECT * from products WHERE product_id = '${ id}'`,  ( err, row ) =>
             {
                   if ( err ) {
                         res.status(500).json(err) // internal server error
@@ -114,7 +117,7 @@ const getSingleProduct = ( req, res ) =>
       {
             if ( err ) throw new Error( err )
 
-            connection.query( `SELECT * from products WHERE id = '${ id }'`, ( err, row ) =>
+            connection.query( `SELECT * from products WHERE product_id = '${ id }'`, ( err, row ) =>
             {
                   if ( err ) {
                         res.status(500).json({message:"internal server error"})

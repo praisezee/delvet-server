@@ -147,6 +147,8 @@ app.use( '/auth', require( './routes/auth' ) )
 app.use( '/products', require( './routes/product' ) )
 //Route that handles email verification
 app.use('/verify', require('./routes/verify'))
+// Routes that handles the order of a user
+app.use('/order', require('./routes/order'))
 
 
 

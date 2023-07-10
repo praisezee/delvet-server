@@ -22,7 +22,7 @@ const createUser = async ( req, res ) =>
                         if ( rows.length === 0 ) {
                               
                               const hashedPassword = await bcrypt.hash( password, 10 )
-                              connection.query( 'INSERT INTO users SET ?', { id,name, email, phoneNumber, password: hashedPassword }, ( err, rows ) =>
+                              connection.query( 'INSERT INTO users SET ?', { user_id:id,name, email, phoneNumber, password: hashedPassword }, ( err, rows ) =>
                               {
                               connection.release(); // return the connection to pool
                               if ( !err ) {
@@ -89,7 +89,7 @@ const loginUser = async ( req, res ) =>
                                     secure: true
                               } );
                               const user = {
-                                    id : users.id,
+                                    id : users.user_id,
                                     name : users.name,
                                     email: users.email,
                                     accessToken,
@@ -117,12 +117,12 @@ const updateUser = ( req, res ) =>
       {
             if ( err ) throw err
             console.log( `connected as id ${ connection.threadId }` )
-            connection.query( `SELECT * FROM users WHERE email = '${ email }'`, ( err, rows ) =>
+            connection.query( `SELECT * FROM users WHERE user_id = '${ id }'`, ( err, rows ) =>
             {
                   if ( err ) {
                         res.status(500).json( { message: `user update failed` } );
                   } else if ( !err && rows.length ) {
-                        connection.query( `UPDATE users SET name = '${ name }', email= '${ email }', phoneNumber = '${ phoneNumber }' WHERE id = ${ id }`, ( err, rows ) =>
+                        connection.query( `UPDATE users SET name = '${ name }', email= '${ email }', phoneNumber = '${ phoneNumber }' WHERE user_id = ${ id }`, ( err, rows ) =>
             {
                   connection.release(); // return the connection to pool
                               if ( !err ) {
@@ -155,12 +155,12 @@ const deleteUser = ( req, res ) =>
             if ( err ) throw err
             console.log(`connected as id ${connection.threadId}`)
 
-            connection.query( `SELECT * FROM users WHERE id = ${ id }`, ( err, rows ) =>
+            connection.query( `SELECT * FROM users WHERE user_id = ${ id }`, ( err, rows ) =>
             {
                   if ( err ) {
-                        res.status(500).json( { message: `user update failed` } );
+                        res.status(500).json( { message: `user delete failed` } );
                   } else if ( !err && rows.length ) {
-                        connection.query( `DELETE from users WHERE id = ${ id }`, ( err, rows ) =>
+                        connection.query( `DELETE from users WHERE user_id = ${ id }`, ( err, rows ) =>
             {
                   connection.release(); // return the connection to pool
                               if ( !err ) {
