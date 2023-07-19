@@ -2,7 +2,7 @@ const nodemailer = require( "nodemailer" );
 
 const sendContact = async ( req, res ) =>
 {
-      const { name, phoneNumber, email, message } = req.body;
+      const { firstName,surname, phoneNumber, email, message } = req.body;
       if (!email || !message || !phoneNumber) res.status(400).json({message:'Email, phone number or message is empty'})
       const transporter = nodemailer.createTransport( {
             service: 'gmail',
@@ -15,7 +15,7 @@ const sendContact = async ( req, res ) =>
             }
       } )
       const html = `
-      <p>Name: ${name} </p>
+      <p>Name: ${firstName} ${surname} </p>
 <p>Email: ${email}</p>
 <p>phone Number: ${phoneNumber}</p>
 <p>Message: ${message}</p>
