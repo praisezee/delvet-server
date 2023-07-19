@@ -122,7 +122,7 @@ const updateUser = ( req, res ) =>
                   if ( err ) {
                         res.status(500).json( { message: `user update failed` } );
                   } else if ( !err && rows.length ) {
-                        connection.query( `UPDATE users SET name = '${ name }', email= '${ email }', phoneNumber = '${ phoneNumber }' WHERE user_id = ${ id }`, ( err, rows ) =>
+                        connection.query( `UPDATE users SET name = '${ name }', email= '${ email }', phoneNumber = '${ phoneNumber }' WHERE user_id = '${ id }'`, ( err, rows ) =>
             {
                   connection.release(); // return the connection to pool
                               if ( !err ) {
@@ -152,10 +152,10 @@ const deleteUser = ( req, res ) =>
       const { id } = req.params
       pool.getConnection( ( err, connection ) =>
       {
-            if ( err ) throw err
+            if ( err ) throw new Error(err)
             console.log(`connected as id ${connection.threadId}`)
 
-            connection.query( `SELECT * FROM users WHERE user_id = ${ id }`, ( err, rows ) =>
+            connection.query( `SELECT * FROM users WHERE user_id = '${ id }'`, ( err, rows ) =>
             {
                   if ( err ) {
                         res.status(500).json( { message: `user delete failed` } );
@@ -177,4 +177,27 @@ const deleteUser = ( req, res ) =>
       })
 }
 
-module.exports = { createUser, loginUser, updateUser, deleteUser };
+const getUser = ( req, res ) =>
+{
+      const { id } = req.params;
+      pool.getConnection( ( err, connection ) =>
+      {
+            if ( err ) throw new Error( err )
+            
+            connection.query( `SELECT * FROM users WHERE user_id = '${ id }'`, ( err, rows ) =>
+            {
+                  if(err) return console.error(err)
+                  if ( !err && rows.length === 0 ) return res.status( 400 ).json( { message: `The user with id ${ id } does not exist` } )
+                  const users = { ...rows[ 0 ] }
+                  const user = {
+                        id : users.user_id,
+                        name : users.name,
+                        email: users.email,
+                        phoneNumber : users.phoneNumber
+                  }
+                  res.status(200).json(user)
+            })
+      })
+}
+
+module.exports = { createUser, loginUser, updateUser, deleteUser,getUser };

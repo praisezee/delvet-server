@@ -123,7 +123,8 @@ const getSingleProduct = ( req, res ) =>
                         res.status(500).json({message:"internal server error"})
                   } else if ( !err && row.length ) {
                         const product ={...row[0]}
-                        res.status(200).json(product) 
+                        res.status( 200 ).json( product ) 
+                        console.log('sent')
                   } else {
                         res.status(400).json({message:"product does not exist"})
                   }

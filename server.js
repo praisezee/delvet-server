@@ -141,7 +141,11 @@ app.get( '/', ( req, res, next ) =>
       res.send( 'Hello world' );
       next();
 } );
+//Route that handle contact us
+app.use('/contact', require('./routes/contact'))
 //Route that handles users registration.
+app.use( '/register', require( './routes/register' ) )
+//Route that handles users login, update and delete.
 app.use( '/auth', require( './routes/auth' ) )
 //Route that handles fetching of products
 app.use( '/products', require( './routes/product' ) )
