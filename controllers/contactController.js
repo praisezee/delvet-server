@@ -29,7 +29,7 @@ const from= 'Devlevt Pharmacitical Company'
             subject: 'Someone Tried To Reach You From Your Website',
             html
             } );
-            res.status(200).json({message:'sent'})
+            res.sendStatus(200)
       } catch (err) {
             console.log(err)
             res.status(500).json({message: 'internal server error'})
